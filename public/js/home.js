@@ -17,6 +17,17 @@ $(document).ready(function () {
     */
     $('#number').keyup(function () {
         // your code here
+        $.get('/getCheckNumber', {number: $('#number.field').val()}, (data) => {
+            if (data !== '') {
+                $('#number.field').css('background-color', 'red')
+                $('#error').text('Number already registered')
+                $('#submit').prop('disabled', true)
+            } else {
+                $('#number.field').css('background-color', '#E3E3E3')
+                $('#error').text('')
+                $('#submit').prop('disabled', false)
+            }
+        })
     });
 
     /*
@@ -32,6 +43,32 @@ $(document).ready(function () {
     */
     $('#submit').click(function () {
         // your code here
+        let valid = true
+        $('#name.field').css('background-color', '#E3E3E3')
+        $('#number.field').css('background-color', '#E3E3E3')
+
+        if ($('#name.field').val() == '') {
+            valid = false
+            $('#name.field').css('background-color', 'red')
+        }
+        if ($('#number.field').val() == '') {
+            valid = false
+            $('#number.field').css('background-color', 'red')
+        }
+        if (valid) {
+            let contact = {
+                name: $('#name.field').val(),
+                number: $('#number.field').val()
+            }
+            console.log(contact)
+
+            $.get('/add', contact, (data) => {
+                $('#contacts').append(data)
+
+                $('#name.field').val('')
+                $('#number.field').val('')
+            })
+        }
     });
 
     /*
@@ -43,6 +80,14 @@ $(document).ready(function () {
     */
     $('#contacts').on('click', '.remove', function () {
         // your code here
+        let pElmnts = $(this).siblings('.info').children('.text')
+        let contact = {
+            name: pElmnts[0].innerText,
+            number: pElmnts[1].innerText
+        }
+        $.get('/delete', contact, () => {
+            $(this).parent().remove()
+        })
     });
 
 })

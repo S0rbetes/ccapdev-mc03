@@ -7,7 +7,14 @@ var mongoose = require('mongoose');
 */
 
 var UserSchema = new mongoose.Schema({
-    // your code here
+    name: {
+        type: String,
+        required: true
+    },
+    number: {
+        type: Number,
+        requried: true
+    }
 });
 
 module.exports = mongoose.model('User', UserSchema);
